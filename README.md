@@ -1,2 +1,18 @@
 # mercadolibre-coupon-api
-API for maximaze Mercadolibre coupon
+API para maximizar el uso de un cupon de Mercado Libre
+
+## Requerimiento
+
+Mercado Libre está implementando un nuevo beneficio para los usuarios que más usan la plataforma con un cupón de cierto
+monto gratis que les permitirá comprar tantos items marcados como favoritos que no excedan el monto total. Para esto se
+está analizando construir una API que dado una lista de item_id y el monto total pueda darle la lista de items que
+maximice el total gastado sin excederlo. 
+
+### Aclaraciones:
+- Sólo se puede comprar una unidad por item_id.
+- No hay preferencia en la cantidad total de items siempre y cuando gasten el máximo posible.
+- El precio puede contener hasta 2 decimales.
+
+## Analisis
+
+[En el documento](Design.md) se incluye  el analisis del problema y el diseño realizado.
