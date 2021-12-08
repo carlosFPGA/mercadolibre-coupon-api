@@ -36,12 +36,6 @@
             <version>1.5.13</version>
         </dependency>
 
-        <!-- Actuator -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
         <!-- Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -52,7 +46,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>7.0</version>
+            <version>7.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -89,6 +83,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <configuration>
+                    <version>0-0-3</version>
+                    <projectId>mercadolibre-coupon-api</projectId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
