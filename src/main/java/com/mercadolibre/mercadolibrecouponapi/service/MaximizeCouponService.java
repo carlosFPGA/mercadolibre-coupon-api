@@ -1,5 +1,7 @@
 package com.mercadolibre.mercadolibrecouponapi.service;
 
+import com.mercadolibre.mercadolibrecouponapi.model.Item;
+import com.mercadolibre.mercadolibrecouponapi.model.ItemGroup;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,55 +21,54 @@ public class MaximizeCouponService {
      * @return List of id of items that maximize use of the coupon
      */
     public List<String> calculate(Map<String, Float> items, Float amount) {
-        List<String> selectedItems = new ArrayList<>();
+        List<String> bestPossibleItemIdGroup = new ArrayList<>();
         //validate items are not empty and amount is more than zero
         if (items != null && !items.isEmpty() && amount != null && amount > 0) {
+            List<Item> possibleItems = items.entrySet().stream()
+                    .map(i -> new Item(i.getKey(), i.getValue()))
+                    .collect(Collectors.toList());
             float currentMaximum = -0.01F;
             //Get the best possible group
-            selectedItems = new ArrayList<>(evaluatePossibleItemGroup(new HashMap<>(), items, amount, currentMaximum).keySet());
+            bestPossibleItemIdGroup =
+                    evaluatePossibleItemGroup(new ItemGroup(), possibleItems,
+                            amount, currentMaximum)
+                            .getItemsId();
         }
-        return selectedItems;
+        return bestPossibleItemIdGroup;
     }
 
-    /**
-     * @param itemsInGroup
-     * @param items
-     * @param amount
-     * @param currentMaximum
-     * @return
-     */
-    private Map<String, Float> evaluatePossibleItemGroup(Map<String, Float> itemsInGroup, Map<String, Float> items,
-                                                         Float amount, Float currentMaximum) {
-        Float total = itemsInGroup.values().stream().reduce(0.00F, Float::sum);
-        if (amount.equals(total)) {
-            //Return directly the map when total of items in group is equal to the coupon
-            return itemsInGroup;
-        } else if (total < amount && total > currentMaximum) {
-            //Use current group initially
-            Map<String, Float> selectedItems = new HashMap<>(itemsInGroup);
-            float selectedTotal = total;
 
-            Set<Map.Entry<String, Float>> otherItems
-                    = items.entrySet().stream().filter(item -> !itemsInGroup.containsKey(item.getKey())).collect(Collectors.toSet());
-            for (Map.Entry<String, Float> item : otherItems) {
+    private ItemGroup evaluatePossibleItemGroup(ItemGroup itemGroup, List<Item> items,
+                                                Float amount, Float currentMaximum) {
+        ItemGroup bestPossibleItemGroup = new ItemGroup();
+        float totalGroup = itemGroup.getTotal();
+        if (amount.equals(totalGroup)) {
+            //Return directly the map when total of items in group is equal to the coupon
+            bestPossibleItemGroup = itemGroup;
+        } else if (totalGroup < amount && totalGroup > currentMaximum) {
+            //Use current group initially
+            bestPossibleItemGroup = new ItemGroup(itemGroup);
+            float bestPossibleTotalGroup = totalGroup;
+            List<Item> otherItems = items.stream()
+                    .filter(i -> !itemGroup.containsItem(i))
+                    .collect(Collectors.toList());
+            for (Item otherItem : otherItems) {
                 //Create subgroup in branch using items in current group and one of other item
-                Map<String, Float> itemsInSubGroup = new HashMap<>(itemsInGroup);
-                itemsInSubGroup.put(item.getKey(), item.getValue());
+                ItemGroup itemsSubGroup = new ItemGroup(itemGroup);
+                itemsSubGroup.add(otherItem);
                 //Get the best possible in subgroup
-                Map<String, Float> selectedItemsInSubGroup =
-                        evaluatePossibleItemGroup(itemsInSubGroup,items, amount, total);
-                if (!selectedItemsInSubGroup.isEmpty()) {
-                    Float totalInSubGroup = selectedItemsInSubGroup.values().stream().reduce(0.00F, Float::sum);
-                    if (totalInSubGroup > selectedTotal) {
+                ItemGroup bestPossibleItemsSubGroup =
+                        evaluatePossibleItemGroup(itemsSubGroup, items, amount, totalGroup);
+                if (!bestPossibleItemsSubGroup.isEmpty()) {
+                    float bestPossibleTotalSubGroup = bestPossibleItemsSubGroup.getTotal();
+                    if (bestPossibleTotalSubGroup > bestPossibleTotalGroup) {
                         //Subgroup is the biggest currently total in branch parent
-                        selectedTotal = totalInSubGroup;
-                        selectedItems = new HashMap<>(selectedItemsInSubGroup);
+                        bestPossibleTotalGroup = bestPossibleTotalSubGroup;
+                        bestPossibleItemGroup = bestPossibleItemsSubGroup;
                     }
                 }
             }
-            return selectedItems;
-        } else {
-            return new HashMap<>();
         }
+        return bestPossibleItemGroup;
     }
 }
