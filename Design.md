@@ -1,4 +1,4 @@
-# Diseño
+# Análisis y Diseño
 
 En este documento se describe el proceso de analisis del problema y el diseño realizado.
 
@@ -16,9 +16,11 @@ Con lo cual, se plantea el siguiente algoritmo:
 
 ...
 
-## Diagrama de clases para el modelo de dominio
+## Diagrama de clases
 
-Se plantean las siguientes dos clases para representar el _item_ y un _grupo de items_  (posible solución del problema):
+Se plantean las siguientes clases y en particular para el modelo de dominio:
 
-...
+- Clase __Item__: Modela el item con su precio.
+- Clase __ItemGroup__:Modela a un grupo de items (posible solución del problema).
 
+![Diagrama de Clases](doc/class_diagram.png "Diagrama de clases")

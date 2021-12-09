@@ -13,6 +13,6 @@ maximice el total gastado sin excederlo.
 - No hay preferencia en la cantidad total de items siempre y cuando gasten el máximo posible.
 - El precio puede contener hasta 2 decimales.
 
-## Analisis
+## Análisis
 
 [En el documento](Design.md) se incluye  el analisis del problema y el diseño realizado.
