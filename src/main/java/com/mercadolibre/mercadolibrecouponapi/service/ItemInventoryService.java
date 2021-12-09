@@ -1,30 +1,33 @@
 package com.mercadolibre.mercadolibrecouponapi.service;
 
 import com.mercadolibre.mercadolibrecouponapi.cache.ItemInventoryCache;
+import com.mercadolibre.mercadolibrecouponapi.model.Item;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemInventoryService {
-    final ItemInventoryCache itemInventoryCache;
+    @Autowired
+    ItemInventoryCache itemInventoryCache;
 
-    public ItemInventoryService(ItemInventoryCache itemInventoryCache) {
-        this.itemInventoryCache = itemInventoryCache;
-    }
-
-    public Map<String, Float> getPriceOfItems(List<String> itemsId) {
-        Map<String, Float> mapIdToPrice = new HashMap<>();
-        for(String itemId : itemsId) {
-            if (itemId != null && !itemId.isEmpty()) {
-                Float price = itemInventoryCache.getPriceByItemId(itemId);
-                if (price != null) {
-                    mapIdToPrice.put(itemId, price);
-                }
-            }
+    /**
+     * Get prices of the items
+     * @param itemsId List of id of items
+     * @return List of item with price each one
+     */
+    public List<Item> getItemsWithPrice(List<String> itemsId) {
+        List<Item> items = new ArrayList<>();
+        if(itemsId != null) {
+            items = itemsId.parallelStream()
+                    .filter(itemId -> itemId != null && !itemId.isEmpty())
+                    .map(itemId -> new Item(itemId, itemInventoryCache.getPriceByItemId(itemId)))
+                    .filter(item -> item.getPrice() != null)
+                    .collect(Collectors.toList());
         }
-        return mapIdToPrice;
+        return items;
     }
 }

@@ -2,12 +2,14 @@ package com.mercadolibre.mercadolibrecouponapi.controller;
 
 import com.mercadolibre.mercadolibrecouponapi.dto.ItemListRequest;
 import com.mercadolibre.mercadolibrecouponapi.dto.ItemListResponse;
+import com.mercadolibre.mercadolibrecouponapi.model.Item;
 import com.mercadolibre.mercadolibrecouponapi.service.ItemInventoryService;
 import com.mercadolibre.mercadolibrecouponapi.service.MaximizeCouponService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 class CouponController {
@@ -25,14 +28,11 @@ class CouponController {
     private static final Marker START_MARK = MarkerFactory.getMarker("START");
     private static final Marker FINISH_MARK = MarkerFactory.getMarker("FINISHED_PROCESS");
 
-    final ItemInventoryService itemInventoryService;
+    @Autowired
+    ItemInventoryService itemInventoryService;
 
-    final MaximizeCouponService maximizeCouponService;
-
-    public CouponController(ItemInventoryService itemInventoryService, MaximizeCouponService maximizeCouponService) {
-        this.itemInventoryService = itemInventoryService;
-        this.maximizeCouponService = maximizeCouponService;
-    }
+    @Autowired
+    MaximizeCouponService maximizeCouponService;
 
     @PostMapping(value = "/coupon", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItemListResponse> getMaximumUtilizationCoupon(@RequestBody ItemListRequest itemListRequest) {
@@ -43,9 +43,10 @@ class CouponController {
         logger.info("Quantity of items: {} amount: {}", itemListRequest.getItemIdList().size(),
                 itemListRequest.getAmount());
         logger.debug("Request: {}", itemListRequest);
-        Map<String, Float> priceOfItems = itemInventoryService.getPriceOfItems(itemListRequest.getItemIdList());
+        Map<String, Float> priceOfItems = itemInventoryService.getItemsWithPrice(itemListRequest.getItemIdList())
+                .stream().collect(Collectors.toMap(Item::getId, Item::getPrice));
         logger.info("priceOfItems: {}", priceOfItems);
-        if (priceOfItems == null || priceOfItems.isEmpty()) {
+        if (priceOfItems.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         List<String> itemsId = maximizeCouponService.calculate(priceOfItems, itemListRequest.getAmount());

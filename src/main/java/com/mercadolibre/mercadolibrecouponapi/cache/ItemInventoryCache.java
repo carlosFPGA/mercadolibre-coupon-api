@@ -12,25 +12,33 @@ import org.springframework.stereotype.Component;
 public class ItemInventoryCache {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemInventoryCache.class);
 
-    final ItemInventoryRepository inventoryRepository;
+    @Autowired
+    ItemInventoryRepository inventoryRepository;
 
-    public ItemInventoryCache(ItemInventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
-    }
-
+    /**
+     *  Get price of the item
+     * @param itemId Identification of the item
+     * @return Price of the item
+     */
     @Cacheable(value = "itemInventoryCache", key = "#itemId", unless = "#result == null")
     public Float getPriceByItemId(String itemId) {
         return inventoryRepository.getPriceByItemId(itemId);
     }
 
+    /**
+     * Clean cache for specific item
+     * @param itemId Identification of the item
+     */
     @CacheEvict(value = "itemInventoryCache", key = "#itemId")
-    public void releaseByItemId(String itemId) {
-        LOGGER.info("Clean cache price by itemId");
+    public void releasePriceByItemId(String itemId) {
+        LOGGER.info("Clean cache price by itemId :{}", itemId);
     }
 
+    /**
+     * Clean cache for all items
+     */
     @CacheEvict(cacheNames="itemInventoryCache", allEntries = true)
-    public void releaseAll() {
+    public void releaseAllPrices() {
         LOGGER.info("Clean cache all items");
     }
-
 }
