@@ -1,6 +1,7 @@
 package com.mercadolibre.mercadolibrecouponapi.controller;
 
 import com.mercadolibre.mercadolibrecouponapi.cache.ItemInventoryCache;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for clean cache.
  * @author Carlos Parra
  */
+@Hidden
 @RestController
 public class CleanCacheController {
     @Autowired

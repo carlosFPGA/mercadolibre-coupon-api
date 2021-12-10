@@ -4,6 +4,10 @@ import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupRequest;
 import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupResponse;
 import com.mercadolibre.mercadolibrecouponapi.model.ItemGroup;
 import com.mercadolibre.mercadolibrecouponapi.service.CouponService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -39,6 +43,15 @@ class CouponController {
      * @param request Request with list of id of items and amount
      * @return Http OK with list of id of items and total sum for the best utilization of the coupon
      */
+    @Operation(summary = "Get Group of items that maximize utilization of a coupon",
+            description = "Returns list of items that maximize utilization of a coupon and total sum",
+            tags = { "Coupon" })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Get the best combination",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ItemGroupResponse.class))),
+            @ApiResponse(responseCode = "405", description = "Miss any parameter", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Amount of the coupon is insufficient", content = @Content)
+    })
     @PostMapping(value = "/coupon", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItemGroupResponse> getMaximumUtilizationCoupon(@RequestBody final ItemGroupRequest request) {

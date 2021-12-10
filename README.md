@@ -24,3 +24,11 @@ maximice el total gastado sin excederlo.
 
 ### Validación de Estilo
 ![Reporte de validación de estilo](doc/checkstyle_report.png "Reporte de validación de estilo")
+
+## Posibles mejoras futuras
+
+- [ ] Habilitar metricas de latencia mediante actuator y prometeus.
+- [ ] Modificar para convertir en API reactiva empleando WebFlux and WebClient.
+- [ ] Emplear cache en el cálculo de la solución para grupo de items de tamaño significativo.
+- [ ] Emplear memcache en Google App Engine para compartir el cache entre las instancias.
+- [ ] Emplear Github Actions para generar release y desplegar a Google App Engine automaticamente posterior al merge a master.
