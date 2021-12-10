@@ -5,12 +5,22 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-public class ItemListRequest {
+public class ItemGroupResponse {
     @JsonProperty("item_ids")
     private List<String> itemIdList;
 
-    @JsonProperty("amount")
-    private Float amount;
+    @JsonProperty("total")
+    private Float total;
+
+    public ItemGroupResponse() {
+        super();
+    }
+
+    public ItemGroupResponse(List<String> itemIdList, Float total) {
+        super();
+        this.itemIdList = itemIdList;
+        this.total = total;
+    }
 
     public List<String> getItemIdList() {
         return itemIdList;
@@ -20,12 +30,12 @@ public class ItemListRequest {
         this.itemIdList = itemIdList;
     }
 
-    public Float getAmount() {
-        return amount;
+    public Float getTotal() {
+        return total;
     }
 
-    public void setAmount(Float amount) {
-        this.amount = amount;
+    public void setTotal(Float total) {
+        this.total = total;
     }
 
     @Override

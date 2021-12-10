@@ -2,67 +2,72 @@ package com.mercadolibre.mercadolibrecouponapi.model;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ItemGroup {
-    private Set<Item> items;
+    private Set<Item> itemSet;
 
     public ItemGroup() {
-        this.items = new HashSet<>();
-    }
-
-    public ItemGroup(Set<Item> items) {
-        this.items = items;
+        super();
+        this.itemSet = new HashSet<>();
     }
 
     public ItemGroup(ItemGroup itemGroup) {
-        this.items = new HashSet<>(itemGroup.getItems());
+        super();
+        this.itemSet = new HashSet<>(itemGroup.getItemSet());
     }
 
     public void add(Item item) {
-        if(items == null) {
-            items = new HashSet<>();
+        if(itemSet == null) {
+            itemSet = new HashSet<>();
         }
         if(item != null && item.getPrice() != null) {
-            items.add(item);
+            itemSet.add(item);
         }
     }
 
-    public Set<Item> getItems() {
-        return items;
+    public Set<Item> getItemSet() {
+        return itemSet;
     }
 
-    public void setItems(Set<Item> items) {
-        this.items = items;
+    public void setItemSet(Set<Item> itemSet) {
+        this.itemSet = itemSet;
     }
 
     public float getTotal(){
-        if (items == null) {
+        if (itemSet == null) {
             return 0;
         }
-        return items.stream()
+        return itemSet.stream()
                 .map(Item::getPrice)
                 .reduce(0.0F, Float::sum);
     }
 
-    public List<String> getItemsId() {
-        return items.stream()
+    public List<String> getItemIdList() {
+        if (itemSet == null) {
+            return new ArrayList<>();
+        }
+        return itemSet.stream()
                 .map(Item::getId)
                 .collect(Collectors.toList());
     }
 
     public boolean containsItem(Item item) {
-        return items.stream()
+        if (itemSet == null) {
+            return false;
+        }
+        return itemSet.stream()
                 .map(Item::getId)
                 .collect(Collectors.toList())
                 .contains(item.getId());
     }
 
     public boolean isEmpty() {
-        return items.isEmpty();
+        return itemSet.isEmpty();
     }
 
     @Override
