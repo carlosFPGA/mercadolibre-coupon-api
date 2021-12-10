@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mercadolibre-coupon-api:
+    build: .
+    image: mercadolibre/mercadolibre-coupon-api:0.1.0
+    container_name: mercadolibre-coupon-api
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /home/app/mercadolibre-coupon-api-0.1.0.jar
+    ports:
+      - "8080:8080"
+    environment:
+      - "TZ=America/Bogota"
+    tty: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

@@ -99,7 +99,7 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>2.2.0</version>
                 <configuration>
-                    <version>0-0-4</version>
+                    <version>0-1-0</version>
                     <projectId>mercadolibre-coupon-api</projectId>
                 </configuration>
             </plugin>
