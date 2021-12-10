@@ -1,10 +1,11 @@
 package com.mercadolibre.mercadolibrecouponapi.cache;
 
-import org.slf4j.*;
-import org.springframework.beans.factory.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.scheduling.annotation.*;
-import org.springframework.stereotype.*;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 

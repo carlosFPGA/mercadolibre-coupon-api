@@ -39,6 +39,6 @@ public class ItemInventoryCache {
      */
     @CacheEvict(cacheNames="itemInventoryCache", allEntries = true)
     public void releaseAllPrices() {
-        LOGGER.info("Clean cache all items");
+        LOGGER.info("Clean cache all prices");
     }
 }
