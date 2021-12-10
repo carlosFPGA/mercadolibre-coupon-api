@@ -8,6 +8,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+/**
+ * Cache for price.
+ * @author Carlos Parra
+ */
 @Component
 public class ItemInventoryCache {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemInventoryCache.class);

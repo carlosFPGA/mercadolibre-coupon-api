@@ -13,6 +13,14 @@ maximice el total gastado sin excederlo.
 - No hay preferencia en la cantidad total de items siempre y cuando gasten el máximo posible.
 - El precio puede contener hasta 2 decimales.
 
-## Análisis
+## Análisis del problema y Diseño de solución
 
-[En el documento](Design.md) se incluye  el analisis del problema y el diseño realizado.
+[En el documento](Design.md) se incluye  el analisis y el diseño realizado.
+
+## Calidad del código
+
+### Validación de _Code_ _Coverage_
+![Reporte de Coverage](doc/coverage_report.png "Reporte de Coverage")
+
+### Validación de Estilo
+![Reporte de validación de estilo](doc/checkstyle_report.png "Reporte de validación de estilo")

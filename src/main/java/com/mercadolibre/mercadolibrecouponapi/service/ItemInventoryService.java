@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service for get price of Items using Mercado Libre API.
+ * @author Carlos Parra
+ */
 @Service
 public class ItemInventoryService {
     @Autowired

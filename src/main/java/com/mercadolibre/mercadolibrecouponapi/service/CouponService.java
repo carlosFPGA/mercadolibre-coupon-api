@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for calculations for a coupon.
+ * @author Carlos Parra
+ */
 @Service
 public class CouponService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CouponService.class);

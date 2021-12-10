@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CouponController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mercadolibre-coupon-api</a> &gt; <a href="index.source.html" class="el_package">com.mercadolibre.mercadolibrecouponapi.controller</a> &gt; <span class="el_source">CouponController.java</span></div><h1>CouponController.java</h1><pre class="source lang-java linenums">package com.mercadolibre.mercadolibrecouponapi.controller;
+
+import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupRequest;
+import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupResponse;
+import com.mercadolibre.mercadolibrecouponapi.model.ItemGroup;
+import com.mercadolibre.mercadolibrecouponapi.service.CouponService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+
+/**
+ * Controller for calculations for a coupon.
+ * @author Carlos Parra
+ */
+@RestController
+<span class="fc" id="L28">class CouponController {</span>
+<span class="fc" id="L29">    private static final Logger LOGGER = LoggerFactory.getLogger(CouponController.class);</span>
+
+<span class="fc" id="L31">    private static final Marker START_MARK = MarkerFactory.getMarker(&quot;START&quot;);</span>
+<span class="fc" id="L32">    private static final Marker FINISH_MARK = MarkerFactory.getMarker(&quot;FINISHED_PROCESS&quot;);</span>
+
+    @Autowired
+    private CouponService couponService;
+
+    /**
+     * Endpoint for get best group of items to maximize utilization of a coupon.
+     * @param request Request with list of id of items and amount
+     * @return Http OK with list of id of items and total sum for the best utilization of the coupon
+     */
+    @PostMapping(value = &quot;/coupon&quot;, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;ItemGroupResponse&gt; getMaximumUtilizationCoupon(@RequestBody final ItemGroupRequest request) {
+<span class="fc" id="L45">        LOGGER.info(START_MARK, &quot;STARTED getMaximumUtilizationCoupon&quot;);</span>
+<span class="fc" id="L46">        Instant start = Instant.now();</span>
+        //Validate that the parameters are valid
+<span class="pc bpc" id="L48" title="3 of 6 branches missed.">        if (request == null || request.getItemIdList() == null || request.getAmount() == null) {</span>
+<span class="nc" id="L49">            LOGGER.info(FINISH_MARK, &quot;FINISHED getMaximumUtilizationCoupon with Bad Request&quot;);</span>
+<span class="nc" id="L50">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L51">                    .body(new ItemGroupResponse());</span>
+        }
+<span class="fc" id="L53">        LOGGER.info(&quot;Quantity of items: {} amount: {}&quot;, request.getItemIdList().size(), request.getAmount());</span>
+<span class="fc" id="L54">        LOGGER.debug(&quot;Request: {}&quot;, request);</span>
+
+<span class="fc" id="L56">        ItemGroup bestItemGroup =</span>
+<span class="fc" id="L57">                couponService.getMaximumUtilizationCoupon(request.getItemIdList(), request.getAmount());</span>
+
+        //Validate that the best group exists
+<span class="pc bpc" id="L60" title="1 of 4 branches missed.">        if (bestItemGroup == null || bestItemGroup.isEmpty()) {</span>
+<span class="fc" id="L61">            LOGGER.info(FINISH_MARK, &quot;FINISHED getMaximumUtilizationCoupon with Not Found&quot;);</span>
+<span class="fc" id="L62">            return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
+<span class="fc" id="L63">                    .body(new ItemGroupResponse(new ArrayList&lt;&gt;(), 0.0F));</span>
+        }
+        //Map ItemGroup to ItemsResponse DTO
+<span class="fc" id="L66">        ItemGroupResponse response = new ItemGroupResponse(bestItemGroup.getItemIdList(), bestItemGroup.getTotal());</span>
+
+<span class="fc" id="L68">        long time = Duration.between(start, Instant.now()).toMillis();</span>
+<span class="fc" id="L69">        LOGGER.info(FINISH_MARK, &quot;FINISHED getMaximumUtilizationCoupon in ms : {}&quot;, time);</span>
+<span class="fc" id="L70">        return ResponseEntity.status(HttpStatus.OK).body(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

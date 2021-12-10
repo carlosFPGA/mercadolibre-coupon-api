@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MaximizeCouponService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mercadolibre-coupon-api</a> &gt; <a href="index.source.html" class="el_package">com.mercadolibre.mercadolibrecouponapi.service</a> &gt; <span class="el_source">MaximizeCouponService.java</span></div><h1>MaximizeCouponService.java</h1><pre class="source lang-java linenums">package com.mercadolibre.mercadolibrecouponapi.service;
+
+import com.mercadolibre.mercadolibrecouponapi.model.Item;
+import com.mercadolibre.mercadolibrecouponapi.model.ItemGroup;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+/**
+ * Service for maximize utilization of a coupon.
+ * @author Carlos Parra
+ */
+@Service
+<span class="fc" id="L18">public class MaximizeCouponService {</span>
+
+    /**
+     * Initial value of maximum total (Negative to considerate solution with zero and positive total sum).
+     */
+    public static final float INITIAL_MAXIMUM_TOTAL = -0.01F;
+
+    /**
+     * Get the list of items that maximize use of the coupon when exists solution, in other case, return an empty list.
+     * @param items Map of id of possible items and their price
+     * @param amount Total value of the coupon
+     * @return List of id of items that maximize use of the coupon
+     */
+    public List&lt;String&gt; calculate(final Map&lt;String, Float&gt; items, final Float amount) {
+<span class="fc" id="L32">        List&lt;String&gt; bestPossibleItemIdList = new ArrayList&lt;&gt;();</span>
+        //validate items are not empty and amount is not null
+<span class="fc bfc" id="L34" title="All 6 branches covered.">        if (items != null &amp;&amp; !items.isEmpty() &amp;&amp; amount != null) {</span>
+            //Get list of possible items that are not null
+<span class="fc" id="L36">            List&lt;Item&gt; possibleItemList = items.entrySet().stream()</span>
+<span class="fc" id="L37">                    .filter(Objects::nonNull)</span>
+<span class="fc" id="L38">                    .map(item -&gt; new Item(item.getKey(), item.getValue()))</span>
+<span class="fc" id="L39">                    .collect(Collectors.toList());</span>
+            //Get the best possible group
+<span class="fc" id="L41">            bestPossibleItemIdList = getBestPossibleItemGroup(possibleItemList, amount).getItemIdList();</span>
+        }
+<span class="fc" id="L43">        return bestPossibleItemIdList;</span>
+    }
+
+    /**
+     * Get the group of items that maximize use of the coupon when exists solution, in other case, return an empty.
+     * @param itemList List of items
+     * @param amount Total value of the coupon
+     * @return Group of items that maximize use of the coupon
+     */
+    public ItemGroup getBestPossibleItemGroup(final List&lt;Item&gt; itemList, final Float amount) {
+<span class="fc" id="L53">        ItemGroup bestPossibleItemGroup = new ItemGroup();</span>
+        //validate items are not empty and amount is not null
+<span class="pc bpc" id="L55" title="3 of 6 branches missed.">        if (itemList != null &amp;&amp; !itemList.isEmpty() &amp;&amp; amount != null) {</span>
+            //Get list of possible items that are not null nor greater than the coupon
+<span class="fc" id="L57">            List&lt;Item&gt; possibleItemList = itemList.stream()</span>
+<span class="pc bpc" id="L58" title="3 of 6 branches missed.">                    .filter(item -&gt; item != null &amp;&amp; item.getId() != null &amp;&amp; item.getPrice() != null)</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">                    .filter(item -&gt; item.getPrice() &lt;= amount)</span>
+<span class="fc" id="L60">                    .collect(Collectors.toList());</span>
+            //Get the best possible group
+<span class="fc" id="L62">            bestPossibleItemGroup =</span>
+<span class="fc" id="L63">                    evaluatePossibleItemGroup(new ItemGroup(), possibleItemList, amount, INITIAL_MAXIMUM_TOTAL);</span>
+        }
+<span class="fc" id="L65">        return bestPossibleItemGroup;</span>
+    }
+
+    /**
+     * Evaluate the current group of items and sub-branches and return the best possible group of items in this
+     * branch (the greatest total sum), or null when no group is lower or equals to the amount and greater than the
+     * current maximum found.
+     * @param itemGroup Current group of items to be evaluated
+     * @param itemList List of possible items
+     * @param amount Maximum total sum
+     * @param currentMaximum Current Maximum total sum found
+     * @return Group of items with the greatest total sum
+     */
+    private ItemGroup evaluatePossibleItemGroup(final ItemGroup itemGroup, final List&lt;Item&gt; itemList,
+                                                final Float amount, final Float currentMaximum) {
+<span class="fc" id="L80">        ItemGroup bestItemGroup = new ItemGroup();</span>
+<span class="fc" id="L81">        float totalGroup = itemGroup.getTotal();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (amount.equals(totalGroup)) {</span>
+            //Return directly the map when total of items in group is equal to the coupon
+<span class="fc" id="L84">            bestItemGroup = itemGroup;</span>
+<span class="pc bpc" id="L85" title="1 of 4 branches missed.">        } else if (totalGroup &lt; amount &amp;&amp; totalGroup &gt; currentMaximum) {</span>
+            //Use current group initially
+<span class="fc" id="L87">            bestItemGroup = new ItemGroup(itemGroup);</span>
+<span class="fc" id="L88">            float bestTotalGroup = totalGroup;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            for (Item otherItem : getItemOfOutsideGroupList(itemList, itemGroup)) {</span>
+                //Create child group in branch using items in current group and one of other items
+<span class="fc" id="L91">                ItemGroup itemChildGroup = new ItemGroup(itemGroup);</span>
+<span class="fc" id="L92">                itemChildGroup.add(otherItem);</span>
+                //Get the best possible in child group
+<span class="fc" id="L94">                ItemGroup bestChildGroup =</span>
+<span class="fc" id="L95">                        evaluatePossibleItemGroup(itemChildGroup, itemList, amount, totalGroup);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                if (!bestChildGroup.isEmpty()) {</span>
+<span class="fc" id="L97">                    float bestTotalChildGroup = bestChildGroup.getTotal();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">                    if (bestTotalChildGroup &gt; bestTotalGroup) {</span>
+                        //Subgroup is the biggest currently total in branch parent
+<span class="fc" id="L100">                        bestTotalGroup = bestTotalChildGroup;</span>
+<span class="fc" id="L101">                        bestItemGroup = bestChildGroup;</span>
+                    }
+                }
+<span class="fc" id="L104">            }</span>
+        }
+<span class="fc" id="L106">        return bestItemGroup;</span>
+    }
+
+    /**
+     * Get items that are not in group.
+     * @param itemGroup Group of items
+     * @param itemList List of items
+     * @return List of items that are not in group
+     */
+    private List&lt;Item&gt; getItemOfOutsideGroupList(final List&lt;Item&gt; itemList, final ItemGroup itemGroup) {
+<span class="fc" id="L116">        return itemList.stream()</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                .filter(i -&gt; !itemGroup.containsItem(i))</span>
+<span class="fc" id="L118">                .collect(Collectors.toList());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

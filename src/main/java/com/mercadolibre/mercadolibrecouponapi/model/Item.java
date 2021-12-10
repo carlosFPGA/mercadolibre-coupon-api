@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 
 import java.util.Objects;
 
+/**
+ * Models for a Item.
+ * @author Carlos Parra
+ */
 public class Item {
     private String id;
     private Float price;
@@ -78,8 +82,8 @@ public class Item {
     }
 
     /**
-     * Representation String of the Item.
-     * @return String
+     * Get representation String of the Item.
+     * @return Representation String of the Item
      */
     @Override
     public String toString() {

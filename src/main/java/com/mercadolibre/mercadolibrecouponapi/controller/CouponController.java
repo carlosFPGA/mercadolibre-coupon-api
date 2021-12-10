@@ -20,6 +20,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 
+/**
+ * Controller for calculations for a coupon.
+ * @author Carlos Parra
+ */
 @RestController
 class CouponController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CouponController.class);

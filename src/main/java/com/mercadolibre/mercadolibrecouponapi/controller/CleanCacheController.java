@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for clean cache.
+ * @author Carlos Parra
+ */
 @RestController
 public class CleanCacheController {
     @Autowired

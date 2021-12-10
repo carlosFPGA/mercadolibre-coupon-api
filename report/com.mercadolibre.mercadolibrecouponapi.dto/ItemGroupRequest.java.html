@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemGroupRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mercadolibre-coupon-api</a> &gt; <a href="index.source.html" class="el_package">com.mercadolibre.mercadolibrecouponapi.dto</a> &gt; <span class="el_source">ItemGroupRequest.java</span></div><h1>ItemGroupRequest.java</h1><pre class="source lang-java linenums">package com.mercadolibre.mercadolibrecouponapi.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
+
+import java.util.List;
+
+/**
+ * DTO for request in Coupon Controller.
+ * @author Carlos Parra
+ */
+<span class="fc" id="L12">public class ItemGroupRequest {</span>
+    @JsonProperty(&quot;item_ids&quot;)
+    private List&lt;String&gt; itemIdList;
+
+    @JsonProperty(&quot;amount&quot;)
+    private Float amount;
+
+    /**
+     * Get list of identification of Items.
+     * @return List of identification of Items
+     */
+    public List&lt;String&gt; getItemIdList() {
+<span class="fc" id="L24">        return itemIdList;</span>
+    }
+
+    /**
+     * Set list of identification of Items.
+     * @param itemIdList List of identification of Items
+     */
+    public void setItemIdList(final List&lt;String&gt; itemIdList) {
+<span class="fc" id="L32">        this.itemIdList = itemIdList;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Get amount total of the coupon.
+     * @return Amount total of the coupon
+     */
+    public Float getAmount() {
+<span class="fc" id="L40">        return amount;</span>
+    }
+
+    /**
+     * Set amount total of the coupon.
+     * @param amount Amount total of the coupon
+     */
+    public void setAmount(final Float amount) {
+<span class="fc" id="L48">        this.amount = amount;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Get representation String of request.
+     * @return Representation String of request
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L57">        return new Gson().toJson(this);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

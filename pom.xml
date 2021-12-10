@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.mercadolibre</groupId>
     <artifactId>mercadolibre-coupon-api</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <name>mercadolibre-coupon-api</name>
     <description>mercadolibre-coupon-api</description>
     <properties>
@@ -68,7 +68,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.7.201606060606</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -85,11 +85,21 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>2.2.0</version>
                 <configuration>
-                    <version>0-0-3</version>
+                    <version>0-0-4</version>
                     <projectId>mercadolibre-coupon-api</projectId>
                 </configuration>
             </plugin>
@@ -106,6 +116,17 @@
 
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

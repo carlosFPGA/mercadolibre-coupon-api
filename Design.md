@@ -1,4 +1,4 @@
-# Análisis y Diseño
+# Análisis del problema y Diseño de solución
 
 En este documento se describe el proceso de analisis del problema y el diseño realizado.
 

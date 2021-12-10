@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Repository for get price of Items using Mercado Libre API.
+ * @author Carlos Parra
+ */
 @Repository
 public class ItemInventoryRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemInventoryRepository.class);
@@ -44,6 +48,10 @@ public class ItemInventoryRepository {
         return price;
     }
 
+    /**
+     * Set Url of Mercado Libre API for getting price for an item.
+     * @param urlItemInventory Url of Mercado Libre API
+     */
     public void setUrlItemInventory(final String urlItemInventory) {
         this.urlItemInventory = urlItemInventory;
     }

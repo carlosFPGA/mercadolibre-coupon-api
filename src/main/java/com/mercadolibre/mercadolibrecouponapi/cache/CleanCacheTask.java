@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+/**
+ * Class for task for clean cache.
+ * @author Carlos Parra
+ */
 @Component
 public class CleanCacheTask {
     private static final Logger LOGGER = LoggerFactory.getLogger(CleanCacheTask.class);
