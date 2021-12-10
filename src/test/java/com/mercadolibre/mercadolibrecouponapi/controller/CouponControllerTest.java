@@ -36,15 +36,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class CouponControllerTest {
-    private final String APPLICATION_TYPE = "application/json";
+    private static final String APPLICATION_TYPE = "application/json";
+    public static final float TEST_PRICE = 5000.00F;
+    public static final float TEST_AMOUNT_1 = 1000.00F;
+    public static final float TEST_AMOUNT_2 = 10000.00F;
 
     private MockMvc mvc;
 
     @InjectMocks
-    CouponController couponController;
+    private CouponController couponController;
 
     @Mock
-    CouponService couponService;
+    private CouponService couponService;
 
     @Captor
     private ArgumentCaptor<List<String>> itemIdListCaptor;
@@ -55,7 +58,7 @@ class CouponControllerTest {
     }
 
     @Test
-    void getMaximumUtilizationCoupon_whenRequestMethodGet_ReturnMethodNotAllowed() throws Exception {
+    void getMaximumUtilizationCouponWhenRequestMethodGetThenReturnMethodNotAllowed() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/coupon"))
                 .andExpect(status().isMethodNotAllowed());
 
@@ -64,7 +67,7 @@ class CouponControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"{}", "{\"items_id\":[\"MCA123\"]}", "{\"amount\":1000.00}"})
-    void getMaximumUtilizationCoupon_whenLostSomeParameterInRequest_ReturnBadRequest() throws Exception {
+    void getMaximumUtilizationCouponWhenLostSomeParameterInRequestThenReturnBadRequest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/coupon")
                         .contentType(APPLICATION_TYPE)
                         .content(""))
@@ -74,7 +77,7 @@ class CouponControllerTest {
     }
 
     @Test
-    void getMaximumUtilizationCoupon_whenAmountIsInsufficient_ReturnNotFound() throws Exception {
+    void getMaximumUtilizationCouponWhenAmountIsInsufficientThenReturnNotFound() throws Exception {
         when(couponService.getMaximumUtilizationCoupon(anyList(), anyFloat())).thenReturn(new ItemGroup());
 
         mvc.perform(MockMvcRequestBuilders.post("/coupon")
@@ -83,7 +86,7 @@ class CouponControllerTest {
                 .andExpect(status().isNotFound());
 
         verify(couponService, times(1))
-                .getMaximumUtilizationCoupon(itemIdListCaptor.capture(), eq (1000.00F));
+                .getMaximumUtilizationCoupon(itemIdListCaptor.capture(), eq(TEST_AMOUNT_1));
         List<String> itemIdList = itemIdListCaptor.getValue();
         assertNotNull(itemIdList);
         assertEquals(1, itemIdList.size());
@@ -93,9 +96,9 @@ class CouponControllerTest {
     }
 
     @Test
-    void getMaximumUtilizationCoupon_whenAmountIsInsufficient_ReturnOk() throws Exception {
+    void getMaximumUtilizationCouponWhenSuccessThenReturnOk() throws Exception {
         ItemGroup itemGroup = new ItemGroup();
-        itemGroup.add(new Item("MCA123", 5000.00F));
+        itemGroup.add(new Item("MCA123", TEST_PRICE));
         when(couponService.getMaximumUtilizationCoupon(anyList(), anyFloat()))
                 .thenReturn(itemGroup);
 
@@ -109,7 +112,7 @@ class CouponControllerTest {
                 actualResponse, JSONCompareMode.LENIENT);
 
         verify(couponService, times(1))
-                .getMaximumUtilizationCoupon(itemIdListCaptor.capture(), eq (10000.00F));
+                .getMaximumUtilizationCoupon(itemIdListCaptor.capture(), eq(TEST_AMOUNT_2));
         List<String> itemIdList = itemIdListCaptor.getValue();
         assertNotNull(itemIdList);
         assertEquals(1, itemIdList.size());

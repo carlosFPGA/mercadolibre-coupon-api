@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class MaximizeCouponService {
 
     /**
-     * Initial value of maximum total (Negative to considerate solution with zero and positive total sum)
+     * Initial value of maximum total (Negative to considerate solution with zero and positive total sum).
      */
     public static final float INITIAL_MAXIMUM_TOTAL = -0.01F;
 
@@ -24,7 +24,7 @@ public class MaximizeCouponService {
      * @param amount Total value of the coupon
      * @return List of id of items that maximize use of the coupon
      */
-    public List<String> calculate(Map<String, Float> items, Float amount) {
+    public List<String> calculate(final Map<String, Float> items, final Float amount) {
         List<String> bestPossibleItemIdList = new ArrayList<>();
         //validate items are not empty and amount is not null
         if (items != null && !items.isEmpty() && amount != null) {
@@ -45,7 +45,7 @@ public class MaximizeCouponService {
      * @param amount Total value of the coupon
      * @return Group of items that maximize use of the coupon
      */
-    public ItemGroup getBestPossibleItemGroup(List<Item> itemList, Float amount) {
+    public ItemGroup getBestPossibleItemGroup(final List<Item> itemList, final Float amount) {
         ItemGroup bestPossibleItemGroup = new ItemGroup();
         //validate items are not empty and amount is not null
         if (itemList != null && !itemList.isEmpty() && amount != null) {
@@ -71,7 +71,8 @@ public class MaximizeCouponService {
      * @param currentMaximum Current Maximum total sum found
      * @return Group of items with the greatest total sum
      */
-    private ItemGroup evaluatePossibleItemGroup(ItemGroup itemGroup, List<Item> itemList, Float amount, Float currentMaximum) {
+    private ItemGroup evaluatePossibleItemGroup(final ItemGroup itemGroup, final List<Item> itemList,
+                                                final Float amount, final Float currentMaximum) {
         ItemGroup bestItemGroup = new ItemGroup();
         float totalGroup = itemGroup.getTotal();
         if (amount.equals(totalGroup)) {
@@ -102,12 +103,12 @@ public class MaximizeCouponService {
     }
 
     /**
-     * Get items that are not in group
+     * Get items that are not in group.
      * @param itemGroup Group of items
      * @param itemList List of items
      * @return List of items that are not in group
      */
-    private List<Item> getItemOfOutsideGroupList(List<Item> itemList, ItemGroup itemGroup) {
+    private List<Item> getItemOfOutsideGroupList(final List<Item> itemList, final ItemGroup itemGroup) {
         return itemList.stream()
                 .filter(i -> !itemGroup.containsItem(i))
                 .collect(Collectors.toList());

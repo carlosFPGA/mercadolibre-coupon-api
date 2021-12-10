@@ -22,38 +22,39 @@ import java.util.ArrayList;
 
 @RestController
 class CouponController {
-    private static final Logger logger = LoggerFactory.getLogger(CouponController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CouponController.class);
 
     private static final Marker START_MARK = MarkerFactory.getMarker("START");
     private static final Marker FINISH_MARK = MarkerFactory.getMarker("FINISHED_PROCESS");
 
     @Autowired
-    CouponService couponService;
+    private CouponService couponService;
 
     /**
-     * Endpoint for get best group of items to maximize utilization of a coupon
+     * Endpoint for get best group of items to maximize utilization of a coupon.
      * @param request Request with list of id of items and amount
      * @return Http OK with list of id of items and total sum for the best utilization of the coupon
      */
-    @PostMapping(value = "/coupon", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ItemGroupResponse> getMaximumUtilizationCoupon(@RequestBody ItemGroupRequest request) {
-        logger.info(START_MARK, "STARTED getMaximumUtilizationCoupon");
+    @PostMapping(value = "/coupon", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ItemGroupResponse> getMaximumUtilizationCoupon(@RequestBody final ItemGroupRequest request) {
+        LOGGER.info(START_MARK, "STARTED getMaximumUtilizationCoupon");
         Instant start = Instant.now();
         //Validate that the parameters are valid
         if (request == null || request.getItemIdList() == null || request.getAmount() == null) {
-            logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Bad Request");
+            LOGGER.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Bad Request");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ItemGroupResponse());
         }
-        logger.info("Quantity of items: {} amount: {}", request.getItemIdList().size(), request.getAmount());
-        logger.debug("Request: {}", request);
+        LOGGER.info("Quantity of items: {} amount: {}", request.getItemIdList().size(), request.getAmount());
+        LOGGER.debug("Request: {}", request);
 
         ItemGroup bestItemGroup =
                 couponService.getMaximumUtilizationCoupon(request.getItemIdList(), request.getAmount());
 
         //Validate that the best group exists
-        if(bestItemGroup == null || bestItemGroup.isEmpty()){
-            logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Not Found");
+        if (bestItemGroup == null || bestItemGroup.isEmpty()) {
+            LOGGER.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Not Found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ItemGroupResponse(new ArrayList<>(), 0.0F));
         }
@@ -61,7 +62,7 @@ class CouponController {
         ItemGroupResponse response = new ItemGroupResponse(bestItemGroup.getItemIdList(), bestItemGroup.getTotal());
 
         long time = Duration.between(start, Instant.now()).toMillis();
-        logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon in ms : {}", time);
+        LOGGER.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon in ms : {}", time);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

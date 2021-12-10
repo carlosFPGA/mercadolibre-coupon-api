@@ -13,31 +13,31 @@ public class ItemInventoryCache {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemInventoryCache.class);
 
     @Autowired
-    ItemInventoryRepository inventoryRepository;
+    private ItemInventoryRepository inventoryRepository;
 
     /**
-     *  Get price of the item
+     *  Get price of the item.
      * @param itemId Identification of the item
      * @return Price of the item
      */
     @Cacheable(value = "itemInventoryCache", unless = "#result == null")
-    public Float getPriceByItemId(String itemId) {
+    public Float getPriceByItemId(final String itemId) {
         return inventoryRepository.getPriceByItemId(itemId);
     }
 
     /**
-     * Clean cache for specific item
+     * Clean cache for specific item.
      * @param itemId Identification of the item
      */
     @CacheEvict(value = "itemInventoryCache")
-    public void releasePriceByItemId(String itemId) {
+    public void releasePriceByItemId(final String itemId) {
         LOGGER.info("Clean cache price by itemId :{}", itemId);
     }
 
     /**
-     * Clean cache for all items
+     * Clean cache for all items.
      */
-    @CacheEvict(cacheNames="itemInventoryCache", allEntries = true)
+    @CacheEvict(cacheNames = "itemInventoryCache", allEntries = true)
     public void releaseAllPrices() {
         LOGGER.info("Clean cache all prices");
     }

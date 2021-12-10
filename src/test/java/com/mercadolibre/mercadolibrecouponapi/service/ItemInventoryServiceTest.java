@@ -28,17 +28,19 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ItemInventoryServiceTest {
 
+    public static final float TEST_PRICE_1 = 10.00F;
+    public static final float TEST_PRICE_2 = 20.00F;
     @InjectMocks
-    ItemInventoryService itemInventoryService;
+    private ItemInventoryService itemInventoryService;
 
     @Mock
-    ItemInventoryCache itemInventoryCache;
+    private ItemInventoryCache itemInventoryCache;
 
     @Captor
     private ArgumentCaptor<String> itemId;
 
     @Test
-    void getItemWithPriceList_whenItemsIsNull_thenReturnEmptyMap() {
+    void getItemWithPriceListWhenItemsIsNullThenReturnEmptyMap() {
         List<Item> itemList = itemInventoryService.getItemWithPriceList(null);
         assertNotNull(itemList);
         assertTrue(itemList.isEmpty());
@@ -47,7 +49,7 @@ class ItemInventoryServiceTest {
     }
 
     @Test
-    void getItemWithPriceList_whenItemsIsEmpty_thenReturnEmptyMap() {
+    void getItemWithPriceListWhenItemsIsEmptyThenReturnEmptyMap() {
         List<Item> itemList = itemInventoryService.getItemWithPriceList(new ArrayList<>());
         assertNotNull(itemList);
         assertTrue(itemList.isEmpty());
@@ -56,20 +58,20 @@ class ItemInventoryServiceTest {
     }
 
     @Test
-    void getItemWithPriceList_whenItemsIsValid_thenReturnPriceInMap() {
-        when(itemInventoryCache.getPriceByItemId("MLA123")).thenReturn(10.00F);
+    void getItemWithPriceListWhenItemsIsValidThenReturnPriceInMap() {
+        when(itemInventoryCache.getPriceByItemId("MLA123")).thenReturn(TEST_PRICE_1);
 
         List<Item> itemList = itemInventoryService.getItemWithPriceList(Collections.singletonList("MLA123"));
         assertNotNull(itemList);
         assertEquals(1, itemList.size());
         assertEquals("MLA123", itemList.get(0).getId());
-        assertEquals(10.00F,  itemList.get(0).getPrice());
+        assertEquals(TEST_PRICE_1,  itemList.get(0).getPrice());
 
         verifyUseItemInventoryService(Collections.singletonList("MLA123"));
     }
 
     @Test
-    void getItemWithPriceList_whenItemsIsValidButPriceIsNull_thenReturnEmptyMap() {
+    void getItemWithPriceListWhenItemsIsValidButPriceIsNullThenReturnEmptyMap() {
         when(itemInventoryCache.getPriceByItemId("MLA123")).thenReturn(null);
 
         List<Item> itemList = itemInventoryService.getItemWithPriceList(Collections.singletonList("MLA123"));
@@ -80,47 +82,47 @@ class ItemInventoryServiceTest {
     }
 
     @Test
-    void getItemWithPriceList_whenItemInListIsNull_thenReturnOtherPrices() {
-        when(itemInventoryCache.getPriceByItemId(anyString())).thenReturn(10.00F);
+    void getItemWithPriceListWhenItemInListIsNullThenReturnOtherPrices() {
+        when(itemInventoryCache.getPriceByItemId(anyString())).thenReturn(TEST_PRICE_1);
 
         List<Item> itemList = itemInventoryService.getItemWithPriceList(Arrays.asList("MLA123", null));
         assertNotNull(itemList);
         assertEquals(1, itemList.size());
         assertEquals("MLA123", itemList.get(0).getId());
-        assertEquals(10.00F,  itemList.get(0).getPrice());
+        assertEquals(TEST_PRICE_1,  itemList.get(0).getPrice());
 
         verifyUseItemInventoryService(Collections.singletonList("MLA123"));
     }
 
     @Test
-    void getItemWithPriceList_whenItemInListIsEmpty_thenReturnOtherPrices() {
-        when(itemInventoryCache.getPriceByItemId(anyString())).thenReturn(10.00F);
+    void getItemWithPriceListWhenItemInListIsEmptyThenReturnOtherPrices() {
+        when(itemInventoryCache.getPriceByItemId(anyString())).thenReturn(TEST_PRICE_1);
 
         List<Item> itemList = itemInventoryService.getItemWithPriceList(Arrays.asList("MLA123", ""));
         assertNotNull(itemList);
         assertEquals(1, itemList.size());
         assertEquals("MLA123", itemList.get(0).getId());
-        assertEquals(10.00F,  itemList.get(0).getPrice());
+        assertEquals(TEST_PRICE_1,  itemList.get(0).getPrice());
 
         verifyUseItemInventoryService(Collections.singletonList("MLA123"));
     }
 
     @Test
-    void getItemWithPriceList_whenTwoItems_thenReturnTwoItems() {
-        when(itemInventoryCache.getPriceByItemId("MLA123")).thenReturn(10.00F);
-        when(itemInventoryCache.getPriceByItemId("MLA456")).thenReturn(20.00F);
+    void getItemWithPriceListWhenTwoItemsThenReturnTwoItems() {
+        when(itemInventoryCache.getPriceByItemId("MLA123")).thenReturn(TEST_PRICE_1);
+        when(itemInventoryCache.getPriceByItemId("MLA456")).thenReturn(TEST_PRICE_2);
 
         List<Item> itemList = itemInventoryService.getItemWithPriceList(Arrays.asList("MLA123", "MLA456"));
         assertNotNull(itemList);
         assertEquals(2, itemList.size());
-        assertTrue(itemList.contains(new Item("MLA123", 10.00F)));
-        assertTrue(itemList.contains(new Item("MLA456", 20.00F)));
+        assertTrue(itemList.contains(new Item("MLA123", TEST_PRICE_1)));
+        assertTrue(itemList.contains(new Item("MLA456", TEST_PRICE_2)));
 
         verifyUseItemInventoryService(Arrays.asList("MLA123", "MLA456"));
     }
 
 
-    private void verifyUseItemInventoryService(List<String> itemIdListExpected) {
+    private void verifyUseItemInventoryService(final List<String> itemIdListExpected) {
         verify(itemInventoryCache, times(itemIdListExpected.size())).getPriceByItemId(itemId.capture());
         List<String> itemIdListActual = itemId.getAllValues();
         assertNotNull(itemIdListActual);

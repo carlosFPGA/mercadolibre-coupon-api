@@ -16,7 +16,7 @@ public class ItemGroupResponse {
         super();
     }
 
-    public ItemGroupResponse(List<String> itemIdList, Float total) {
+    public ItemGroupResponse(final List<String> itemIdList, final Float total) {
         super();
         this.itemIdList = itemIdList;
         this.total = total;
@@ -26,7 +26,7 @@ public class ItemGroupResponse {
         return itemIdList;
     }
 
-    public void setItemIdList(List<String> itemIdList) {
+    public void setItemIdList(final List<String> itemIdList) {
         this.itemIdList = itemIdList;
     }
 
@@ -34,7 +34,7 @@ public class ItemGroupResponse {
         return total;
     }
 
-    public void setTotal(Float total) {
+    public void setTotal(final Float total) {
         this.total = total;
     }
 

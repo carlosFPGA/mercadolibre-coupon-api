@@ -11,13 +11,13 @@ import java.util.List;
 
 @Service
 public class CouponService {
-    private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CouponService.class);
 
     @Autowired
-    ItemInventoryService itemInventoryService;
+    private ItemInventoryService itemInventoryService;
 
     @Autowired
-    MaximizeCouponService maximizeCouponService;
+    private MaximizeCouponService maximizeCouponService;
 
     /**
      *  Get the group of items that maximize use of the coupon when exists solution, in other case, return an empty
@@ -26,15 +26,15 @@ public class CouponService {
      * @param amount Total value of the coupon
      * @return Group of items that maximize use of the coupon
      */
-    public ItemGroup getMaximumUtilizationCoupon(List<String> itemIdList, Float amount) {
+    public ItemGroup getMaximumUtilizationCoupon(final List<String> itemIdList, final Float amount) {
         ItemGroup bestItemGroup = new ItemGroup();
         try {
             List<Item> itemList = itemInventoryService.getItemWithPriceList(itemIdList);
-            logger.debug("itemList: {}", itemList);
+            LOGGER.debug("itemList: {}", itemList);
             bestItemGroup = maximizeCouponService.getBestPossibleItemGroup(itemList, amount);
-            logger.info("bestPossibleItemGroup: {}", bestItemGroup);
+            LOGGER.info("bestPossibleItemGroup: {}", bestItemGroup);
         } catch (Exception e) {
-            logger.error("Error in getMaximumUtilizationCoupon", e);
+            LOGGER.error("Error in getMaximumUtilizationCoupon", e);
         }
         return bestItemGroup;
     }

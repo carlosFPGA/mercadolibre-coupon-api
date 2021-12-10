@@ -11,19 +11,20 @@ import java.util.Objects;
 
 @Component
 public class CleanCacheTask {
-    private static final Logger logger = LoggerFactory.getLogger(CleanCacheTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CleanCacheTask.class);
     @Autowired
-    CacheManager cacheManager;
+    private CacheManager cacheManager;
 
     /**
-     * Scheduled clean All Cache
+     * Scheduled clean All Cache.
      */
-    @Scheduled(fixedRateString = "${clear.cache.fixed.rate:3600000}", initialDelayString = "${clear.cache.init.delay:3600000}")
+    @Scheduled(fixedRateString = "${clear.cache.fixed.rate:3600000}",
+            initialDelayString = "${clear.cache.init.delay:3600000}")
     public void cleanAllCache() {
         cacheManager.getCacheNames()
                 .parallelStream()
                 .forEach(name -> {
-                    logger.info("Scheduled Clean Cache : {}", name);
+                    LOGGER.info("Scheduled Clean Cache : {}", name);
                     Objects.requireNonNull(cacheManager.getCache(name)).clear();
                 });
     }

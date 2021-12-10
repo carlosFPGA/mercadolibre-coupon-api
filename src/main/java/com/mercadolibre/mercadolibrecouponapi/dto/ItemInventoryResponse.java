@@ -16,7 +16,7 @@ public class ItemInventoryResponse {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -24,7 +24,7 @@ public class ItemInventoryResponse {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(final Float price) {
         this.price = price;
     }
 

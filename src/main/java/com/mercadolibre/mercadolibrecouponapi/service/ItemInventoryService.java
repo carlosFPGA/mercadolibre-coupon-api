@@ -12,16 +12,16 @@ import java.util.stream.Collectors;
 @Service
 public class ItemInventoryService {
     @Autowired
-    ItemInventoryCache itemInventoryCache;
+    private ItemInventoryCache itemInventoryCache;
 
     /**
-     * Get prices of the items
+     * Get prices of the items.
      * @param itemIdList List of id of items
      * @return List of item with price each one
      */
-    public List<Item> getItemWithPriceList(List<String> itemIdList) {
+    public List<Item> getItemWithPriceList(final List<String> itemIdList) {
         List<Item> itemList = new ArrayList<>();
-        if(itemIdList != null) {
+        if (itemIdList != null) {
             itemList = itemIdList.parallelStream()
                     .filter(itemId -> itemId != null && !itemId.isEmpty())
                     .map(itemId -> new Item(itemId, itemInventoryCache.getPriceByItemId(itemId)))

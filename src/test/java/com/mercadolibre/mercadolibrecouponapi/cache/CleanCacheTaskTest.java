@@ -21,16 +21,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CleanCacheTaskTest {
     @InjectMocks
-    CleanCacheTask cleanCacheTask;
+    private CleanCacheTask cleanCacheTask;
 
     @Mock
-    CacheManager cacheManager;
+    private CacheManager cacheManager;
 
     @Mock
-    Cache cache;
+    private Cache cache;
 
     @Test
-    void cleanAllCache_whenThereAreNotCache_DoNothing() {
+    void cleanAllCacheWhenThereAreNotCacheThenDoNothing() {
         when(cacheManager.getCacheNames()).thenReturn(new ArrayList<>());
 
         cleanCacheTask.cleanAllCache();
@@ -41,7 +41,7 @@ class CleanCacheTaskTest {
     }
 
     @Test
-    void cleanAllCache_whenThereIsOneCache_CleanCache() {
+    void cleanAllCacheWhenThereIsOneCacheThenCleanCache() {
         when(cacheManager.getCacheNames()).thenReturn(Collections.singletonList("itemInventoryCache"));
         when(cacheManager.getCache("itemInventoryCache")).thenReturn(cache);
 

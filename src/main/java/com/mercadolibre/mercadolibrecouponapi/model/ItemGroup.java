@@ -16,20 +16,20 @@ public class ItemGroup {
         this.itemSet = new HashSet<>();
     }
 
-    public ItemGroup(Set<Item> itemSet) {
+    public ItemGroup(final Set<Item> itemSet) {
         this.itemSet = itemSet;
     }
 
-    public ItemGroup(ItemGroup itemGroup) {
+    public ItemGroup(final ItemGroup itemGroup) {
         super();
         this.itemSet = new HashSet<>(itemGroup.getItemSet());
     }
 
-    public void add(Item item) {
-        if(itemSet == null) {
+    public void add(final Item item) {
+        if (itemSet == null) {
             itemSet = new HashSet<>();
         }
-        if(item != null && item.getPrice() != null) {
+        if (item != null && item.getPrice() != null) {
             itemSet.add(item);
         }
     }
@@ -38,11 +38,11 @@ public class ItemGroup {
         return itemSet;
     }
 
-    public void setItemSet(Set<Item> itemSet) {
+    public void setItemSet(final Set<Item> itemSet) {
         this.itemSet = itemSet;
     }
 
-    public float getTotal(){
+    public float getTotal() {
         if (itemSet == null) {
             return 0;
         }
@@ -60,7 +60,7 @@ public class ItemGroup {
                 .collect(Collectors.toList());
     }
 
-    public boolean containsItem(Item item) {
+    public boolean containsItem(final Item item) {
         if (itemSet == null) {
             return false;
         }

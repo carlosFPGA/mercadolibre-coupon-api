@@ -1,7 +1,8 @@
 package com.mercadolibre.mercadolibrecouponapi.controller;
 
 import com.mercadolibre.mercadolibrecouponapi.cache.ItemInventoryCache;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -10,20 +11,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class CleanCacheControllerTest {
-    private final String APPLICATION_TYPE = "application/json";
+    private static final String APPLICATION_TYPE = "application/json";
 
     private MockMvc mvc;
 
     @InjectMocks
-    CleanCacheController cleanCacheController;
+    private CleanCacheController cleanCacheController;
 
     @Mock
-    ItemInventoryCache itemInventoryCache;
+    private ItemInventoryCache itemInventoryCache;
 
     @BeforeEach
     void prepareMock() {
@@ -31,7 +35,7 @@ class CleanCacheControllerTest {
     }
 
     @Test
-    void releasePriceByItemId_whenRequestMethodPost_ReturnMethodNotAllowed() throws Exception {
+    void releasePriceByItemIdWhenRequestMethodPostThenReturnMethodNotAllowed() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/cleanCache/price/MLA123"))
                 .andExpect(status().isMethodNotAllowed());
 
@@ -39,7 +43,7 @@ class CleanCacheControllerTest {
     }
 
     @Test
-    void releasePriceByItemId_whenItemIdIsValid_ReturnOk() throws Exception {
+    void releasePriceByItemIdWhenItemIdIsValidThenReturnOk() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/cleanCache/price/MLA123"))
                 .andExpect(status().isOk());
 
@@ -48,7 +52,7 @@ class CleanCacheControllerTest {
     }
 
     @Test
-    void releaseAllPrices_whenRequestMethodPost_ReturnMethodNotAllowed() throws Exception {
+    void releaseAllPricesWhenRequestMethodPostThenReturnMethodNotAllowed() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/cleanCache/allPrices"))
                 .andExpect(status().isMethodNotAllowed());
 
@@ -56,7 +60,7 @@ class CleanCacheControllerTest {
     }
 
     @Test
-    void releaseAllPrices_whenRequestIsValid_ReturnOk() throws Exception {
+    void releaseAllPricesWhenRequestIsValidThenReturnOk() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/cleanCache/allPrices"))
                 .andExpect(status().isOk());
 

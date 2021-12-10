@@ -16,7 +16,7 @@ public class ItemGroupRequest {
         return itemIdList;
     }
 
-    public void setItemIdList(List<String> itemIdList) {
+    public void setItemIdList(final List<String> itemIdList) {
         this.itemIdList = itemIdList;
     }
 
@@ -24,7 +24,7 @@ public class ItemGroupRequest {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(final Float amount) {
         this.amount = amount;
     }
 

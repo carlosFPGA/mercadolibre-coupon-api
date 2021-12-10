@@ -10,7 +10,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class MercadolibreCouponApiApplication {
 
-    public static void main(String[] args) {
+    /**
+     * Main method.
+     * @param args Arguments
+     */
+    public static void main(final String[] args) {
         SpringApplication.run(MercadolibreCouponApiApplication.class, args);
     }
 

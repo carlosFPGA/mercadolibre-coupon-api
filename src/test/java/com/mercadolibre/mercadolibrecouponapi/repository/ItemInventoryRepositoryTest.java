@@ -21,11 +21,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ItemInventoryRepositoryTest {
+    public static final float TEST_PRICE = 10.00F;
     @InjectMocks
-    ItemInventoryRepository itemInventoryRepository;
+    private ItemInventoryRepository itemInventoryRepository;
 
     @Mock
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @BeforeEach
     void prepareMock() {
@@ -33,7 +34,7 @@ class ItemInventoryRepositoryTest {
     }
 
     @Test
-    void getPriceByItemId_whenErrorInCommunication_thenReturnNull() {
+    void getPriceByItemIdWhenErrorInCommunicationThenReturnNull() {
         String itemId = "MLA123";
         when(restTemplate.getForEntity(eq("https://localtest/items/{itemId}"), any(), eq(itemId)))
                 .thenThrow(RestClientException.class);
@@ -43,7 +44,7 @@ class ItemInventoryRepositoryTest {
     }
 
     @Test
-    void getPriceByItemId_whenItemDoesNotExists_thenReturnNull() {
+    void getPriceByItemIdWhenItemDoesNotExistsThenReturnNull() {
         String itemId = "MLA123";
         when(restTemplate.getForEntity(eq("https://localtest/items/{itemId}"), any(), eq(itemId)))
                 .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
@@ -53,7 +54,7 @@ class ItemInventoryRepositoryTest {
     }
 
     @Test
-    void getPriceByItemId_whenResponseOkButBodyIsNull_thenReturnNull() {
+    void getPriceByItemIdWhenResponseOkButBodyIsNullThenReturnNull() {
         String itemId = "MLA123";
         when(restTemplate.getForEntity(eq("https://localtest/items/{itemId}"), any(), eq(itemId)))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK).body(null));
@@ -63,7 +64,7 @@ class ItemInventoryRepositoryTest {
     }
 
     @Test
-    void getPriceByItemId_whenResponseOkButPriceIsNull_thenReturnNull() {
+    void getPriceByItemIdWhenResponseOkButPriceIsNullThenReturnNull() {
         String itemId = "MLA123";
         ItemInventoryResponse itemResponse = new ItemInventoryResponse();
         itemResponse.setId("MLA123");
@@ -76,9 +77,9 @@ class ItemInventoryRepositoryTest {
     }
 
     @Test
-    void getPriceByItemId_whenResponseIsValid_thenReturnPrice() {
+    void getPriceByItemIdWhenResponseIsValidThenReturnPrice() {
         String itemId = "MLA123";
-        Float price = 10.00F;
+        Float price = TEST_PRICE;
         ItemInventoryResponse itemResponse = new ItemInventoryResponse();
         itemResponse.setId("MLA123");
         itemResponse.setPrice(price);
