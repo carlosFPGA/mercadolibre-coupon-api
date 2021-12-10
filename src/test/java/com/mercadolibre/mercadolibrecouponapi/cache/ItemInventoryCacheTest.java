@@ -23,9 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
@@ -92,6 +90,7 @@ class ItemInventoryCacheTest {
 
         //Verify inventoryRepository was invoked once
         verify(inventoryRepository, times(1)).getPriceByItemId(itemId);
+        verifyNoMoreInteractions(inventoryRepository);
     }
 
     @Test
@@ -116,6 +115,7 @@ class ItemInventoryCacheTest {
 
         //Verify inventoryRepository was invoked twice
         verify(inventoryRepository, times(2)).getPriceByItemId(itemId);
+        verifyNoMoreInteractions(inventoryRepository);
     }
 
     @Test
@@ -140,6 +140,7 @@ class ItemInventoryCacheTest {
 
         //Verify inventoryRepository was invoked twice
         verify(inventoryRepository, times(2)).getPriceByItemId(itemId);
+        verifyNoMoreInteractions(inventoryRepository);
     }
 
     @Test
@@ -167,6 +168,7 @@ class ItemInventoryCacheTest {
 
         //Verify inventoryRepository was invoked twice
         verify(inventoryRepository, times(1)).getPriceByItemId(itemId);
+        verifyNoMoreInteractions(inventoryRepository);
     }
 
     private void verifyValueIsInCache(String itemId, Float expected) {
