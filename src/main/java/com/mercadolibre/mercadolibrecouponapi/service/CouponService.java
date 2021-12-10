@@ -21,16 +21,21 @@ public class CouponService {
 
     /**
      *  Get the group of items that maximize use of the coupon when exists solution, in other case, return an empty
-     *  when there is no solution or null when there are no valid items.
+     *  when there is no solution.
      * @param itemIdList List of identification of items
      * @param amount Total value of the coupon
      * @return Group of items that maximize use of the coupon
      */
     public ItemGroup getMaximumUtilizationCoupon(List<String> itemIdList, Float amount) {
-        List<Item> itemList = itemInventoryService.getItemWithPriceList(itemIdList);
-        logger.debug("itemList: {}", itemList);
-        ItemGroup bestItemGroup = maximizeCouponService.getBestPossibleItemGroup(itemList, amount);
-        logger.info("bestPossibleItemGroup: {}", bestItemGroup);
+        ItemGroup bestItemGroup = new ItemGroup();
+        try {
+            List<Item> itemList = itemInventoryService.getItemWithPriceList(itemIdList);
+            logger.debug("itemList: {}", itemList);
+            bestItemGroup = maximizeCouponService.getBestPossibleItemGroup(itemList, amount);
+            logger.info("bestPossibleItemGroup: {}", bestItemGroup);
+        } catch (Exception e) {
+            logger.error("Error in getMaximumUtilizationCoupon", e);
+        }
         return bestItemGroup;
     }
 }

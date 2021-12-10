@@ -13,8 +13,11 @@ import java.util.Objects;
 public class CleanCacheTask {
     private static final Logger logger = LoggerFactory.getLogger(CleanCacheTask.class);
     @Autowired
-    private CacheManager cacheManager;
+    CacheManager cacheManager;
 
+    /**
+     * Scheduled clean All Cache
+     */
     @Scheduled(fixedRateString = "${clear.cache.fixed.rate:3600000}", initialDelayString = "${clear.cache.init.delay:3600000}")
     public void cleanAllCache() {
         cacheManager.getCacheNames()

@@ -16,6 +16,10 @@ public class ItemGroup {
         this.itemSet = new HashSet<>();
     }
 
+    public ItemGroup(Set<Item> itemSet) {
+        this.itemSet = itemSet;
+    }
+
     public ItemGroup(ItemGroup itemGroup) {
         super();
         this.itemSet = new HashSet<>(itemGroup.getItemSet());

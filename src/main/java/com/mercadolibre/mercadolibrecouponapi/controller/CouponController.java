@@ -57,11 +57,11 @@ class CouponController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ItemGroupResponse(new ArrayList<>(), 0.0F));
         }
+        //Map ItemGroup to ItemsResponse DTO
+        ItemGroupResponse response = new ItemGroupResponse(bestItemGroup.getItemIdList(), bestItemGroup.getTotal());
 
         long time = Duration.between(start, Instant.now()).toMillis();
         logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon in ms : {}", time);
-        //Map ItemGroup to ItemsResponse DTO
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ItemGroupResponse(bestItemGroup.getItemIdList(), bestItemGroup.getTotal()));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
