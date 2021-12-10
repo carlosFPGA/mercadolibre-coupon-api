@@ -20,7 +20,7 @@ public class ItemInventoryCache {
      * @param itemId Identification of the item
      * @return Price of the item
      */
-    @Cacheable(value = "itemInventoryCache", key = "#itemId", unless = "#result == null")
+    @Cacheable(value = "itemInventoryCache", unless = "#result == null")
     public Float getPriceByItemId(String itemId) {
         return inventoryRepository.getPriceByItemId(itemId);
     }
@@ -29,7 +29,7 @@ public class ItemInventoryCache {
      * Clean cache for specific item
      * @param itemId Identification of the item
      */
-    @CacheEvict(value = "itemInventoryCache", key = "#itemId")
+    @CacheEvict(value = "itemInventoryCache")
     public void releasePriceByItemId(String itemId) {
         LOGGER.info("Clean cache price by itemId :{}", itemId);
     }
