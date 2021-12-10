@@ -1,10 +1,9 @@
 package com.mercadolibre.mercadolibrecouponapi.controller;
 
-import com.mercadolibre.mercadolibrecouponapi.dto.ItemListRequest;
-import com.mercadolibre.mercadolibrecouponapi.dto.ItemListResponse;
-import com.mercadolibre.mercadolibrecouponapi.model.Item;
-import com.mercadolibre.mercadolibrecouponapi.service.ItemInventoryService;
-import com.mercadolibre.mercadolibrecouponapi.service.MaximizeCouponService;
+import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupRequest;
+import com.mercadolibre.mercadolibrecouponapi.dto.ItemGroupResponse;
+import com.mercadolibre.mercadolibrecouponapi.model.ItemGroup;
+import com.mercadolibre.mercadolibrecouponapi.service.CouponService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 
 @RestController
 class CouponController {
@@ -29,40 +28,40 @@ class CouponController {
     private static final Marker FINISH_MARK = MarkerFactory.getMarker("FINISHED_PROCESS");
 
     @Autowired
-    ItemInventoryService itemInventoryService;
+    CouponService couponService;
 
-    @Autowired
-    MaximizeCouponService maximizeCouponService;
-
+    /**
+     * Endpoint for get best group of items to maximize utilization of a coupon
+     * @param request Request with list of id of items and amount
+     * @return Http OK with list of id of items and total sum for the best utilization of the coupon
+     */
     @PostMapping(value = "/coupon", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ItemListResponse> getMaximumUtilizationCoupon(@RequestBody ItemListRequest itemListRequest) {
+    public ResponseEntity<ItemGroupResponse> getMaximumUtilizationCoupon(@RequestBody ItemGroupRequest request) {
         logger.info(START_MARK, "STARTED getMaximumUtilizationCoupon");
-        if (itemListRequest == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        Instant start = Instant.now();
+        //Validate that the parameters are valid
+        if (request == null || request.getItemIdList() == null || request.getAmount() == null) {
+            logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Bad Request");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ItemGroupResponse());
         }
-        logger.info("Quantity of items: {} amount: {}", itemListRequest.getItemIdList().size(),
-                itemListRequest.getAmount());
-        logger.debug("Request: {}", itemListRequest);
-        Map<String, Float> priceOfItems = itemInventoryService.getItemsWithPrice(itemListRequest.getItemIdList())
-                .stream().collect(Collectors.toMap(Item::getId, Item::getPrice));
-        logger.info("priceOfItems: {}", priceOfItems);
-        if (priceOfItems.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        logger.info("Quantity of items: {} amount: {}", request.getItemIdList().size(), request.getAmount());
+        logger.debug("Request: {}", request);
+
+        ItemGroup bestItemGroup =
+                couponService.getMaximumUtilizationCoupon(request.getItemIdList(), request.getAmount());
+
+        //Validate that the best group exists
+        if(bestItemGroup == null || bestItemGroup.isEmpty()){
+            logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon with Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ItemGroupResponse(new ArrayList<>(), 0.0F));
         }
-        List<String> itemsId = maximizeCouponService.calculate(priceOfItems, itemListRequest.getAmount());
-        logger.info("itemsId: {}", itemsId);
-        if (itemsId == null || itemsId.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        Float total = priceOfItems.entrySet().stream().filter(e -> itemsId.contains(e.getKey()))
-                .map(Map.Entry::getValue).reduce(0.0F, Float::sum);
 
-        ItemListResponse itemListResponse = new ItemListResponse();
-        itemListResponse.setItemIdList(itemsId);
-        itemListResponse.setTotal(total);
-
-        logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon");
-        return ResponseEntity.status(HttpStatus.OK).body(itemListResponse);
-
+        long time = Duration.between(start, Instant.now()).toMillis();
+        logger.info(FINISH_MARK, "FINISHED getMaximumUtilizationCoupon in ms : {}", time);
+        //Map ItemGroup to ItemsResponse DTO
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ItemGroupResponse(bestItemGroup.getItemIdList(), bestItemGroup.getTotal()));
     }
 }

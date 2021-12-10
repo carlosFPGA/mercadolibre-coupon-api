@@ -76,13 +76,13 @@ class MaximizeCouponServiceTest {
     }
 
     @Test
-    void calculate_whenThreeItemsAndSumIsGreaterThanAmountAndItemTwoIsTheBiggestValid_thenReturnItemTwo() {
-        Map<String, Float> items  = new HashMap<String, Float>() {{
+    void calculate_whenThreeItemsAndSumIsBiggerThanAmountAndItemTwoIsTheBiggestValid_thenReturnItemTwo() {
+        Map<String, Float> itemToPriceMap  = new HashMap<String, Float>() {{
             put("MLA01", 1.00F);
             put("MLA02", 1.02F);
             put("MLA03", 1.01F);
         }};
-        List<String> result = maximizeCouponService.calculate(items, 2.00F);
+        List<String> result = maximizeCouponService.calculate(itemToPriceMap, 2.00F);
         assertNotNull(result);
         assertEquals(1, result.size());
         assertTrue(result.contains("MLA02"));
@@ -90,12 +90,12 @@ class MaximizeCouponServiceTest {
 
     @Test
     void calculate_whenThreeItemsAndSumOfTwoItemsIsTheBiggestValid_thenReturnTheTwoItems() {
-        Map<String, Float> items  = new HashMap<String, Float>() {{
+        Map<String, Float> itemToPriceMap  = new HashMap<String, Float>() {{
             put("MLA01", 1.00F);
             put("MLA02", 1.10F);
             put("MLA03", 0.02F);
         }};
-        List<String> result = maximizeCouponService.calculate(items, 1.05F);
+        List<String> result = maximizeCouponService.calculate(itemToPriceMap, 1.05F);
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.contains("MLA01"));
@@ -103,26 +103,26 @@ class MaximizeCouponServiceTest {
     }
 
     @Test
-    void calculate_whenThreeItemsAndAllItemsAreGreaterThanAmount_thenReturnEmpty() {
-        Map<String, Float> items  = new HashMap<String, Float>() {{
+    void calculate_whenThreeItemsAndAllItemsAreBiggerThanAmount_thenReturnEmpty() {
+        Map<String, Float> itemToPriceMap  = new HashMap<String, Float>() {{
             put("MLA01", 2.00F);
             put("MLA02", 3.10F);
             put("MLA03", 4.02F);
         }};
-        List<String> result = maximizeCouponService.calculate(items, 1.05F);
+        List<String> result = maximizeCouponService.calculate(itemToPriceMap, 1.05F);
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void calculate_whenFourItemsAndSumOfTwoItemsIsTheBiggestValid_thenReturnTheTwoItems() {
-        Map<String, Float> items  = new HashMap<String, Float>() {{
+        Map<String, Float> itemToPriceMap  = new HashMap<String, Float>() {{
             put("MLA01", 2.00F);
             put("MLA02", 1.10F);
             put("MLA03", 0.45F);
             put("MLA04", 0.75F);
         }};
-        List<String> result = maximizeCouponService.calculate(items, 1.50F);
+        List<String> result = maximizeCouponService.calculate(itemToPriceMap, 1.50F);
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.contains("MLA03"));
@@ -131,14 +131,14 @@ class MaximizeCouponServiceTest {
 
     @Test
     void calculate_whenFiveItemsAndSumOfFourItemsIsTheBiggestValid_thenReturnTheFourItems() {
-        Map<String, Float> items  = new HashMap<String, Float>() {{
+        Map<String, Float> itemToPriceMap  = new HashMap<String, Float>() {{
             put("MLA01", 100.00F);
             put("MLA02", 210.00F);
             put("MLA03", 260.00F);
             put("MLA04", 80.00F);
             put("MLA05", 90.00F);
         }};
-        List<String> result = maximizeCouponService.calculate(items, 500.00F);
+        List<String> result = maximizeCouponService.calculate(itemToPriceMap, 500.00F);
         assertNotNull(result);
         assertEquals(4, result.size());
         assertTrue(result.contains("MLA01"));

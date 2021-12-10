@@ -16,18 +16,18 @@ public class ItemInventoryService {
 
     /**
      * Get prices of the items
-     * @param itemsId List of id of items
+     * @param itemIdList List of id of items
      * @return List of item with price each one
      */
-    public List<Item> getItemsWithPrice(List<String> itemsId) {
-        List<Item> items = new ArrayList<>();
-        if(itemsId != null) {
-            items = itemsId.parallelStream()
+    public List<Item> getItemWithPriceList(List<String> itemIdList) {
+        List<Item> itemList = new ArrayList<>();
+        if(itemIdList != null) {
+            itemList = itemIdList.parallelStream()
                     .filter(itemId -> itemId != null && !itemId.isEmpty())
                     .map(itemId -> new Item(itemId, itemInventoryCache.getPriceByItemId(itemId)))
                     .filter(item -> item.getPrice() != null)
                     .collect(Collectors.toList());
         }
-        return items;
+        return itemList;
     }
 }
